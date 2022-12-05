@@ -17,8 +17,36 @@ using namespace std;
 using ll = long long;
 using str = string;
 
-int main() {
-    ifstream infile("0101_input.txt");
+const str INPUT = "input.txt";
+
+void task1() {
+    ifstream infile(INPUT);
+
+    ll max = 0;
+    ll current = 0;
+    ll item = 0;
+    str line;
+    
+    while(getline(infile, line)) {
+        if(line.size() > 1){
+            stringstream stream(line);
+            stream >> item;
+            current += item;
+
+        } else {
+            if(current > max){
+                max = current;
+            }
+            current = 0;
+        }
+    }
+    infile.close();
+
+    cout << max << endl;
+}
+
+void task2() {
+    ifstream infile(INPUT);
 
     vec<ll> heap;
 
@@ -35,18 +63,21 @@ int main() {
 
         } else {
             heap.push_back(current);
-            push_heap(heap.begin(), heap.end());
             current = 0;
         }
     }
 
     infile.close();
-    for(int i=0;i<3;i++){
-        pop_heap(heap.begin(), heap.end());
-        max += heap.back();
-        heap.pop_back();
-    }
+    sort(heap.begin(), heap.end(), greater<ll>());
 
-    cout << max << endl;
+    cout << heap[0]+heap[1]+heap[2] << endl;
 }
+
+int main() {
+    task1();
+    task2();
+
+}
+
+
 
