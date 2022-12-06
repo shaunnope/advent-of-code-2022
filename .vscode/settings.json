@@ -5,6 +5,8 @@
         "iosfwd": "cpp",
         "ostream": "cpp",
         "vector": "cpp",
-        "deque": "cpp"
+        "deque": "cpp",
+        "xstddef": "cpp",
+        "numeric": "cpp"
     }
 }
