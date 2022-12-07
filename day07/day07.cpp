@@ -22,15 +22,18 @@ using str = string;
 const str INPUT = "input.txt";
 const str TEST = "test.txt";
 
-ll parse_line(str line, vec<str>& path, set<str>& hist){
+ll parse_line(str line, vec<str>& path, set<vec<str>>& hist, map<vec<str>,ll>& dir_sizes){
+
+    vec<str> current;
 
     switch(line[0]) {
         case '$': // command
-            
-            if(line.substr(2,3) == "cd"){
+            if(line.substr(2,3) == "cd "){
                 str item = line.substr(5);
-                if(item == ".."){
+                if(item == ".."){ // finished processing directory
+                    current = path;
                     path.pop_back();
+                    dir_sizes[path] += dir_sizes[current];
                 } else {
                     path.push_back(item);
                 }
@@ -39,6 +42,13 @@ ll parse_line(str line, vec<str>& path, set<str>& hist){
             break;
 
         case 'd': // directory
+            str dir = line.substr(4);
+            path.push_back(dir);
+            current = path;
+
+            dir_sizes.insert({current, 0});
+            path.pop_back();
+
             break;
             
         default: // file
@@ -47,9 +57,13 @@ ll parse_line(str line, vec<str>& path, set<str>& hist){
             stringstream lstream(line);
             lstream >> size >> item;
             path.push_back(item);
-            str current(path[0]);
-            auto [it, success] = hist.insert(current);
-            if(success && size <= 100000){
+
+            current = path;
+            path.pop_back();
+
+            size_t hist_length = hist.size();
+            hist.insert(current);
+            if(hist.size() > hist_length && size <= 100000){
                 return size;
             }
             break;
@@ -65,6 +79,8 @@ void task1(str input) {
     ifstream infile(input);
     str line;
 
+    map<vec<str>, ll> dir_sizes;
+
     /**
      * store current path
      * if in new directory, track files recorded
@@ -72,11 +88,11 @@ void task1(str input) {
      * 
      */
     vec<str> path = {};
-    set<str> hist = {}; 
+    set<vec<str>> hist = {}; 
     ll res = 0;
 
     while(getline(infile, line)){
-       res += parse_line(line, path, hist);
+       res += parse_line(line, path, hist, dir_sizes);
     }
     
     infile.close();
@@ -101,6 +117,7 @@ void task2(str input) {
     // cout << endl;
 
 }
+
 
 int main() {
     task1(TEST);

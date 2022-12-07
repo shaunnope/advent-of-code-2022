@@ -56,6 +56,7 @@ ll find_start(stringstream& input, int n){
         counts[buf.front()-'a']--;
         buf.pop();
     }
+    return 0;
 }
 
 
