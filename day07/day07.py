@@ -16,9 +16,8 @@ def parse_line(line, path, dirs):
 
     elif tokens[0] not in ["$", "dir"]:
         dirs[tuple(path)] += int(tokens[0])
-        
 
-def task1(input):
+def parse_file(input):
     with open(input, "r") as f:
         lines = f.readlines()
 
@@ -27,7 +26,11 @@ def task1(input):
 
     for line in lines:
         parse_line(line, path, dirs)
-    
+
+    return dirs
+        
+
+def task1(dirs):
     res = 0
     for size in dirs.values():
         if size <= 100000:
@@ -35,4 +38,17 @@ def task1(input):
 
     return res
 
-print(task1(INPUT))
+def task2(dirs):
+    sizes = sorted(list(dirs.values()))
+    print(sizes)
+
+    thres = sizes[-1] - 40000000
+
+    for size in sizes:
+        if size > thres:
+            return size
+
+
+dirs = parse_file(INPUT)
+print(task1(dirs))
+print(task2(dirs))
