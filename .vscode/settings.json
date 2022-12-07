@@ -7,6 +7,7 @@
         "vector": "cpp",
         "deque": "cpp",
         "xstddef": "cpp",
-        "numeric": "cpp"
+        "numeric": "cpp",
+        "xtree": "cpp"
     }
 }
