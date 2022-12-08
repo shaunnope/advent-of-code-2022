@@ -25,6 +25,7 @@ const str TEST = "test.txt";
 ll parse_line(str line, vec<str>& path, set<vec<str>>& hist, map<vec<str>,ll>& dir_sizes){
 
     vec<str> current;
+    str dir;
 
     switch(line[0]) {
         case '$': // command
@@ -42,7 +43,7 @@ ll parse_line(str line, vec<str>& path, set<vec<str>>& hist, map<vec<str>,ll>& d
             break;
 
         case 'd': // directory
-            str dir = line.substr(4);
+            dir = line.substr(4);
             path.push_back(dir);
             current = path;
 
