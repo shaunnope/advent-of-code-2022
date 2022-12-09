@@ -8,6 +8,8 @@
         "deque": "cpp",
         "xstddef": "cpp",
         "numeric": "cpp",
-        "xtree": "cpp"
+        "xtree": "cpp",
+        "utility": "cpp",
+        "bitset": "cpp"
     }
 }
