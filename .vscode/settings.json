@@ -10,6 +10,11 @@
         "numeric": "cpp",
         "xtree": "cpp",
         "utility": "cpp",
-        "bitset": "cpp"
+        "bitset": "cpp",
+        "set": "cpp",
+        "algorithm": "cpp",
+        "map": "cpp",
+        "iterator": "cpp",
+        "xutility": "cpp"
     }
 }
