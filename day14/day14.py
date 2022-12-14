@@ -87,38 +87,8 @@ class Grid:
 
         return (x,y)
 
-    def find_free_prev(self, x=500, y=-1):
-        below = self.find_below(x,y)
-        if below[0] == y:
-            return (x,y), None
-        
-        prev = None
-        if below[0] - y >= 50:
-            prev = (x,y-1)
-
-        y = below[0]-1
-        free = None
-
-        if self.get(x-1,y+1) and self.get(x+1,y+1): # solid ground
-            return (x,y), prev
-
-        if self.get(x-1,y+1) is None: # left empty
-            free = self.find_free(x-1,y+1)
-            prev = (free[0]+1, free[1]-1)
-            if free != (x-1,y): # can drop left
-                return free, prev           
-            
-        if self.get(x+1,y+1) is None: # right empty
-            right = self.find_free(x+1,y+1)
-            rprev = (right[0]-1, right[1]-1)
-            if right != (x+1,y): # can drop right
-                return right, rprev
-
-        return (x,y), prev
-
     def add_ground(self):
         lowest = self.lowest
-        print(min(self.grid.keys())-20, max(self.grid.keys())+21)
         for i in range(min(self.grid.keys())-lowest, max(self.grid.keys())+lowest):
             self.insert(i,lowest+2, "#")
 
@@ -130,12 +100,29 @@ class Flow(Grid):
         self.grid = deepcopy(grid.grid)
         self.state = grid
 
+    def __str__(self):
+        rep = ""
+        for i in range(self.lowest+2):
+            for j in range(min(self.grid.keys())-1, max(self.grid.keys())+2):
+                c = self.get(j,i)
+                if c is None:
+                    c = "."
+                elif c in [0,1,-1]:
+                    c = str(c%3)
+                rep += c
+            
+            rep += "\n"
+            
+        return rep
+
     def set_drop(self, x, y1, y2):
         for i in range(y1, y2+1):
             self.insert(x, i, 0)
 
     def find_free(self, x=500, y=-1):
         below = self.state.find_below(x,y)
+        if below is None:
+            return None
         self.set_drop(x, y+1, below[0]-1)
         if below[0] == y:
             return (x,y)
@@ -161,12 +148,11 @@ class Flow(Grid):
         return (x,y)
 
     def backtrack(self, x,y):
-        while self.state.get(x,y) is not None:
-            if self.get(x,y) not in [0,1,-1]:
-                return (500,-1)
+        if self.get(x,y) not in [0,1,-1]:
+            return (500,-1)
 
-            x += self.get(x,y)
-            y -= 1
+        x += self.get(x,y)
+        y -= 1
 
         return x,y
 
@@ -197,10 +183,11 @@ def task1(input: str):
         lines = f.read().splitlines()
 
     grid = parse_input(lines)
+    flow = Flow(grid) 
     print(grid)
 
     res = 0
-    free = grid.find_free()
+    free = flow.find_free()
     while free is not None:
         grid.insert(*free, "x")
         res += 1
@@ -231,7 +218,7 @@ def task2(input):
             prev = flow.backtrack(*free)
             free = flow.find_free(*prev)
 
-        print(grid)
+        print(flow)
     sys.stdout = sys.__stdout__
     return res
 
